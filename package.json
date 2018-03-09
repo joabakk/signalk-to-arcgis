@@ -1,0 +1,22 @@
+{
+  "name": "signalk-to-arcgis",
+  "version": "0.0.1",
+  "description": "Signalk node server plugin to respond to api call with arcGIS formatted json with vessels' info",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joabakk/signalk-to-arcgis.git"
+  },
+  "keywords": [
+    "signalk-node-server-plugin"
+  ],
+  "author": "Joachim Bakke",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joabakk/signalk-to-arcgis/issues"
+  },
+  "homepage": "https://github.com/joabakk/signalk-to-arcgis#readme"
+}
