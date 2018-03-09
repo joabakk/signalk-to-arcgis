@@ -44,7 +44,7 @@ module.exports = function(app, options) {
 
   return {
     id: "signalk-to-arcgis",
-    name: "arcGIS",
+    name: "arcGIS export API",
     description: "Plugin to respond with arcGIS formatted json containing each vessel's data",
 
     schema: {
