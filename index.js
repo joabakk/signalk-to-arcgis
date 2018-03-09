@@ -53,7 +53,7 @@ module.exports = function(app, options) {
     start: function(options) {},
 
     registerWithRouter: function(router) {
-
+      // http://localhost:3000/plugins/signalk-to-arcgis/getJson
       router.get('/getJson', (req, res) => { //list all polar tables (both sqlite and user entered)
         res.contentType('application/json');
 
