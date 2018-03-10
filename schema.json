@@ -1,0 +1,103 @@
+{
+  "displayFieldName" : "",
+  "fieldAliases" : {
+    "MMSI" : "MMSI",
+    "IMO" : "IMO",
+    "LAT" : "LAT",
+    "LON" : "LON",
+    "SPEED" : "SPEED",
+    "HEADING" : "HEADING",
+    "COURSE" : "COURSE",
+    "STATUS" : "STATUS",
+    "TIMESTAMP_" : "TIMESTAMP",
+    "SOURCE" : "SOURCE",
+    "SHIPNAME" : "The Shipname of the subject vessel",
+    "SHIPTYPE" : "The Shiptype of the subject vessel according to AIS transmissions",
+    "CALLSIGN" : "CALLSIGN",
+    "FLAG" : "FLAG"
+  },
+  "geometryType" : "esriGeometryPoint",
+  "spatialReference" : {
+    "wkid" : 4326,
+    "latestWkid" : 4326
+  },
+  "fields" : [
+    {
+      "name" : "MMSI",
+      "type" : "esriFieldTypeInteger",
+      "alias" : "MMSI"
+    },
+    {
+      "name" : "IMO",
+      "type" : "esriFieldTypeInteger",
+      "alias" : "IMO"
+    },
+    {
+      "name" : "LAT",
+      "type" : "esriFieldTypeDouble",
+      "alias" : "LAT"
+    },
+    {
+      "name" : "LON",
+      "type" : "esriFieldTypeDouble",
+      "alias" : "LON"
+    },
+    {
+      "name" : "SPEED",
+      "type" : "esriFieldTypeInteger",
+      "alias" : "SPEED"
+    },
+    {
+      "name" : "HEADING",
+      "type" : "esriFieldTypeInteger",
+      "alias" : "HEADING"
+    },
+    {
+      "name" : "COURSE",
+      "type" : "esriFieldTypeInteger",
+      "alias" : "COURSE"
+    },
+    {
+      "name" : "STATUS",
+      "type" : "esriFieldTypeString",
+      "alias" : "STATUS"
+    },
+    {
+      "name" : "TIMESTAMP_",
+      "type" : "esriFieldTypeDate",
+      "alias" : "TIMESTAMP",
+      "length" : 8
+    },
+    {
+      "name" : "SOURCE",
+      "type" : "esriFieldTypeString",
+      "alias" : "SOURCE",
+      "length" : 100
+    },
+    {
+      "name" : "SHIPNAME",
+      "type" : "esriFieldTypeString",
+      "alias" : "SHIPNAME",
+      "length" : 100
+    },
+    {
+      "name" : "SHIPTYPE",
+      "type" : "esriFieldTypeString",
+      "alias" : "SHIPTYPE"
+    },
+    {
+      "name" : "CALLSIGN",
+      "type" : "esriFieldTypeString",
+      "alias" : "CALLSIGN",
+      "length" : 100
+    },
+    {
+      "name" : "FLAG",
+      "type" : "esriFieldTypeString",
+      "alias" : "FLAG",
+      "length" : 100
+    }
+  ],
+  "features" : []
+}
+

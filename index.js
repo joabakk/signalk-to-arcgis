@@ -14,10 +14,11 @@
 */
 
 
-const Bacon = require('baconjs');
+//const Bacon = require('baconjs');
 const debug = require('debug')('signalk-arcgis');
 const util = require('util');
 const utilSK = require('@signalk/nmea0183-utilities');
+var obj = require("./schema.json"); //require empty schema 
 //const express = require("express");
 //const _ = require('lodash');
 var db,json;
@@ -37,7 +38,7 @@ const maxInterval = 2 ;//max interval between updates for all items to avoid upd
 module.exports = function(app, options) {
   'use strict';
   var client;
-  var selfContext = "vessels." + app.selfId;
+  var context = "vessels.*";
 
   var unsubscribes = [];
   var shouldStore = function(path) { return true; };
@@ -48,25 +49,31 @@ module.exports = function(app, options) {
     description: "Plugin to respond with arcGIS formatted json containing each vessel's data",
 
     schema: {
-    },
+    title: "arcGIS export API",
+    type: "object",
+    properties: {
+    }
+  },
 
     start: function(options) {},
 
     registerWithRouter: function(router) {
       // http://localhost:3000/plugins/signalk-to-arcgis/getJson
-      router.get('/getJson', (req, res) => { //list all polar tables (both sqlite and user entered)
+      router.get('/getJson', (req, res) => { 
         res.contentType('application/json');
-
-        db.serialize(function () {
-          db.all("select name from sqlite_master where type='table'", function (err, tables) {
-            // error will be an Error if one occurred during the query
-            if(err){
-              debug("registerWithRouter error: " + err.message);
-            }
-            res.send(JSON.stringify(tables))
-          });
-        });
-
+       
+        var response = app.getPath('vessels')
+        /*var exjson = {'key':'...abc...', 'key2':'...xyz...'};
+for(var exKey in exjson) {
+if(exjson.hasOwnProperty('key2')){
+    //define here
+    console.log("key:"+exKey+", value:"+exjson[exKey]);
+}*/
+        //var string = "{'key':'value'}";
+        //define key value
+        //exjson.key2 = '...abc...';
+        //var obj = JSON.parse(string);
+        res.send(JSON.stringify(obj, null, 4))
       })
 
 
