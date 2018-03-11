@@ -14,34 +14,18 @@
 */
 
 
-//const Bacon = require('baconjs');
 const debug = require('debug')('signalk-arcgis');
 const util = require('util');
+const moment = require("moment")
 const utilSK = require('@signalk/nmea0183-utilities');
 var obj = require("./schema.json"); //require empty schema 
-//const express = require("express");
 const _ = require('lodash');
-var db,json;
-var pushInterval;
 
-var vmg, rot, stw, awa, twa, aws, tws, eng, sog, cog, tack;
-
-
-
-const items = [
-  "navigation.speedThroughWater",
-  "navigation.courseOverGroundTrue",
-  "navigation.speedOverGround"
-];
-const maxInterval = 2 ;//max interval between updates for all items to avoid updating on stale data
 
 module.exports = function(app, options) {
   'use strict';
   var client;
   var context = "vessels.*";
-
-  var unsubscribes = [];
-  var shouldStore = function(path) { return true; };
 
   return {
     id: "signalk-to-arcgis",
@@ -63,7 +47,6 @@ module.exports = function(app, options) {
         res.contentType('application/json');
         obj.features = [] //initialize so it does not grow by each call
          
-        //var fullSk = app.getPath('vessels')
         var response = {} 
         
         _.values(app.getPath('vessels')).forEach((vessel) => {
@@ -72,35 +55,24 @@ module.exports = function(app, options) {
             attributes.IMO = parseInt(vessel.imo)
             attributes.LAT = parseFloat(_.get(vessel, 'navigation.position.value.latitude'))
             attributes.LON = parseFloat(_.get(vessel, 'navigation.position.value.longitude'))
+            attributes.SPEED = parseFloat(utilSK.transform(_.get(vessel, 'navigation.speedOverGround.value'), 'ms', 'knots'))
+            attributes.HEADING = parseFloat(utilSK.transform(_.get(vessel, 'navigation.headingTrue.value'), 'rad', 'deg'))
+            attributes.COURSE = parseFloat(utilSK.transform(_.get(vessel, 'navigation.courseOverGroundTrue.value'), 'rad', 'deg'))
+            attributes.STATUS = _.get(vessel, 'navigation.state.value')
+            attributes.TIMESTAMP_ = moment(_.get(vessel, 'navigation.position.timestamp')).unix()
+            attributes.SOURCE = _.get(vessel, 'navigation.position.$source')
+            attributes.SHIPNAME = vessel.name
+            attributes.SHIPTYPE = _.get(vessel, 'design.aisShipType.value.name')
+            attributes.CALLSIGN = _.get(vessel, 'communication.callsignVhf')
+            attributes.FLAG = vessel.flag
             
             response.attributes = attributes
-            /*
-"LAT": "LAT",
-"LON": "LON",
-"SPEED": "SPEED",
-"HEADING": "HEADING",
-"COURSE": "COURSE",
-"STATUS": "STATUS",
-"TIMESTAMP_": "TIMESTAMP",
-"SOURCE": "SOURCE",
-"SHIPNAME": "The Shipname of the subject vessel",
-"SHIPTYPE": "The Shiptype of the subject vessel according to AIS transmissions",
-"CALLSIGN": "CALLSIGN",
-"FLAG": "FLAG"
-            var position = _.get(vessel, 'navigation.position.value')*/
         })
 
-/*        for(var vessel in fullSk){
-          debug('vessel:' + util.inspect(vessel))
-          var attributes = {} //initialize each vessel
-          attributes.MMSI = app.getPath('vessels' + vessel + '.mmsi')
-          response.attributes = attributes
-          
-        }*/
+
         obj.features.push(response)
 
         res.send(JSON.stringify(obj, null, 4))
-        //res.send(JSON.stringify(fullSk, null, 4))
       })
 
 
@@ -108,9 +80,6 @@ module.exports = function(app, options) {
 
 
     stop: function() {
-      debug("Stopping")
-      unsubscribes.forEach(f => f());
-      items.length = items.length - 1;
 
       debug("Stopped")
     }
