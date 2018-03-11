@@ -20,7 +20,7 @@ const util = require('util');
 const utilSK = require('@signalk/nmea0183-utilities');
 var obj = require("./schema.json"); //require empty schema 
 //const express = require("express");
-//const _ = require('lodash');
+const _ = require('lodash');
 var db,json;
 var pushInterval;
 
@@ -61,19 +61,46 @@ module.exports = function(app, options) {
       // http://localhost:3000/plugins/signalk-to-arcgis/getJson
       router.get('/getJson', (req, res) => { 
         res.contentType('application/json');
-       
-        var response = app.getPath('vessels')
-        /*var exjson = {'key':'...abc...', 'key2':'...xyz...'};
-for(var exKey in exjson) {
-if(exjson.hasOwnProperty('key2')){
-    //define here
-    console.log("key:"+exKey+", value:"+exjson[exKey]);
-}*/
-        //var string = "{'key':'value'}";
-        //define key value
-        //exjson.key2 = '...abc...';
-        //var obj = JSON.parse(string);
+        obj.features = [] //initialize so it does not grow by each call
+         
+        //var fullSk = app.getPath('vessels')
+        var response = {} 
+        
+        _.values(app.getPath('vessels')).forEach((vessel) => {
+            var attributes = {} //initialize each vessel
+            attributes.MMSI = parseInt(vessel.mmsi)
+            attributes.IMO = parseInt(vessel.imo)
+            attributes.LAT = parseFloat(_.get(vessel, 'navigation.position.value.latitude'))
+            attributes.LON = parseFloat(_.get(vessel, 'navigation.position.value.longitude'))
+            
+            response.attributes = attributes
+            /*
+"LAT": "LAT",
+"LON": "LON",
+"SPEED": "SPEED",
+"HEADING": "HEADING",
+"COURSE": "COURSE",
+"STATUS": "STATUS",
+"TIMESTAMP_": "TIMESTAMP",
+"SOURCE": "SOURCE",
+"SHIPNAME": "The Shipname of the subject vessel",
+"SHIPTYPE": "The Shiptype of the subject vessel according to AIS transmissions",
+"CALLSIGN": "CALLSIGN",
+"FLAG": "FLAG"
+            var position = _.get(vessel, 'navigation.position.value')*/
+        })
+
+/*        for(var vessel in fullSk){
+          debug('vessel:' + util.inspect(vessel))
+          var attributes = {} //initialize each vessel
+          attributes.MMSI = app.getPath('vessels' + vessel + '.mmsi')
+          response.attributes = attributes
+          
+        }*/
+        obj.features.push(response)
+
         res.send(JSON.stringify(obj, null, 4))
+        //res.send(JSON.stringify(fullSk, null, 4))
       })
 
 
