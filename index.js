@@ -66,7 +66,12 @@ module.exports = function(app, options) {
             attributes.CALLSIGN = _.get(vessel, 'communication.callsignVhf')
             attributes.FLAG = vessel.flag
             
+            var geometry = {}
+            geometry.x = attributes.LAT
+            geometry.y = attributes.LON
+            
             response.attributes = attributes
+            response.geometry = geometry
         })
 
 
