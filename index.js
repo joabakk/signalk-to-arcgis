@@ -18,6 +18,7 @@ const debug = require('debug')('signalk-arcgis');
 const util = require('util');
 const moment = require("moment")
 const utilSK = require('@signalk/nmea0183-utilities');
+const countries = require('i18n-iso-countries')
 var obj = require("./schema.json"); //require empty schema 
 const _ = require('lodash');
 
@@ -42,8 +43,8 @@ module.exports = function(app, options) {
     start: function(options) {},
 
     registerWithRouter: function(router) {
-      // http://localhost:3000/plugins/signalk-to-arcgis/getJson
-      router.get('/getJson', (req, res) => { 
+      // http://localhost:3000/ArcGis/API/getJson
+      app.get('/ArcGis/API/getJson', (req, res) => { 
         res.contentType('application/json');
         obj.features = [] //initialize so it does not grow by each call
          
@@ -64,7 +65,7 @@ module.exports = function(app, options) {
             attributes.SHIPNAME = vessel.name
             attributes.SHIPTYPE = _.get(vessel, 'design.aisShipType.value.name')
             attributes.CALLSIGN = _.get(vessel, 'communication.callsignVhf')
-            attributes.FLAG = vessel.flag
+            attributes.FLAG = countries.getName(vessel.flag, "en")
             
             var geometry = {}
             geometry.x = attributes.LAT
