@@ -47,9 +47,7 @@ module.exports = function(app, options) {
       app.get('/ArcGis/API/getJson', (req, res) => { 
         res.contentType('application/json');
         obj.features = [] //initialize so it does not grow by each call
-         
-        var response = {} 
-        
+
         _.values(app.getPath('vessels')).forEach((vessel) => {
             var attributes = {} //initialize each vessel
             attributes.MMSI = parseInt(vessel.mmsi)
@@ -70,10 +68,8 @@ module.exports = function(app, options) {
             var geometry = {}
             geometry.x = attributes.LAT
             geometry.y = attributes.LON
-            
-            response.attributes = attributes
-            response.geometry = geometry
-            obj.features.push(response)
+
+            obj.features.push({ attributes, geometry })
         })
 
         res.send(JSON.stringify(obj, null, 4))
