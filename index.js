@@ -76,8 +76,6 @@ module.exports = function(app, options) {
             obj.features.push(response)
         })
 
-        
-
         res.send(JSON.stringify(obj, null, 4))
       })
 
