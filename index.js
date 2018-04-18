@@ -73,10 +73,10 @@ module.exports = function(app, options) {
             
             response.attributes = attributes
             response.geometry = geometry
+            obj.features.push(response)
         })
 
-
-        obj.features.push(response)
+        
 
         res.send(JSON.stringify(obj, null, 4))
       })
