@@ -22,7 +22,36 @@ const countries = require('i18n-iso-countries')
 var obj = require("./schema.json"); //require empty schema
 const _ = require('lodash');
 
-
+function convertVessel(vessel) {
+  return {
+    attributes: {
+      MMSI: parseInt(vessel.mmsi),
+      IMO: parseInt(vessel.imo),
+      LAT: parseFloat(_.get(vessel, 'navigation.position.value.latitude')),
+      LON: parseFloat(_.get(vessel, 'navigation.position.value.longitude')),
+      SPEED: parseFloat(utilSK.transform(_.get(vessel, 'navigation.speedOverGround.value'), 'ms', 'knots')),
+      HEADING: parseFloat(utilSK.transform(_.get(vessel, 'navigation.headingTrue.value'), 'rad', 'deg')),
+      COURSE: parseFloat(utilSK.transform(_.get(vessel, 'navigation.courseOverGroundTrue.value'), 'rad', 'deg')),
+      STATUS: _.get(vessel, 'navigation.state.value'),
+      TIMESTAMP_: moment(_.get(vessel, 'navigation.position.timestamp')).unix(),
+      SOURCE: _.get(vessel, 'navigation.position.$source'),
+      SHIPNAME: vessel.name,
+      SHIPTYPE: _.get(vessel, 'design.aisShipType.value.name'),
+      CALLSIGN: _.get(vessel, 'communication.callsignVhf'),
+      FLAG: countries.getName(vessel.flag, "en"),
+    }
+    geometry: {
+      x: attributes.LAT,
+      y: attributes.LON,
+    }
+  }
+}
+function createArcGis(app) {
+  return {
+    ...obj,
+    features: _.map(app.getPath('vessels'), convertVessel),
+  }
+}
 module.exports = function(app, options) {
   'use strict';
   var client;
@@ -34,11 +63,10 @@ module.exports = function(app, options) {
     description: "Plugin to respond with arcGIS formatted json containing each vessel's data",
 
     schema: {
-    title: "arcGIS export API",
-    type: "object",
-    properties: {
-    }
-  },
+      title: "arcGIS export API",
+      type: "object",
+      properties: {},
+    },
 
     start: function(options) {},
 
@@ -46,44 +74,12 @@ module.exports = function(app, options) {
       // http://localhost:3000/ArcGis/API/getJson
       app.get('/ArcGis/API/getJson', (req, res) => {
         res.contentType('application/json');
-        obj.features = [] //initialize so it does not grow by each call
-
-        _.values(app.getPath('vessels')).forEach((vessel) => {
-            var attributes = {} //initialize each vessel
-            attributes.MMSI = parseInt(vessel.mmsi)
-            attributes.IMO = parseInt(vessel.imo)
-            attributes.LAT = parseFloat(_.get(vessel, 'navigation.position.value.latitude'))
-            attributes.LON = parseFloat(_.get(vessel, 'navigation.position.value.longitude'))
-            attributes.SPEED = parseFloat(utilSK.transform(_.get(vessel, 'navigation.speedOverGround.value'), 'ms', 'knots'))
-            attributes.HEADING = parseFloat(utilSK.transform(_.get(vessel, 'navigation.headingTrue.value'), 'rad', 'deg'))
-            attributes.COURSE = parseFloat(utilSK.transform(_.get(vessel, 'navigation.courseOverGroundTrue.value'), 'rad', 'deg'))
-            attributes.STATUS = _.get(vessel, 'navigation.state.value')
-            attributes.TIMESTAMP_ = moment(_.get(vessel, 'navigation.position.timestamp')).unix()
-            attributes.SOURCE = _.get(vessel, 'navigation.position.$source')
-            attributes.SHIPNAME = vessel.name
-            attributes.SHIPTYPE = _.get(vessel, 'design.aisShipType.value.name')
-            attributes.CALLSIGN = _.get(vessel, 'communication.callsignVhf')
-            attributes.FLAG = countries.getName(vessel.flag, "en")
-
-            var geometry = {}
-            geometry.x = attributes.LAT
-            geometry.y = attributes.LON
-
-            obj.features.push({ attributes, geometry })
-        })
-
-        res.send(JSON.stringify(obj, null, 4))
+        res.send(JSON.stringify(createArcGis(app), null, 4))
       })
-
-
     },
 
-
     stop: function() {
-
       debug("Stopped")
     }
   }
-
-
 }
