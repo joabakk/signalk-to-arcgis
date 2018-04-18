@@ -19,7 +19,6 @@ const moment = require("moment")
 const utilSK = require('@signalk/nmea0183-utilities');
 const countries = require('i18n-iso-countries')
 const obj = require("./schema.json"); // require empty schema
-var obj = require("./schema.json"); //require empty schema
 const _ = require('lodash');
 
 // Process a single vessel value from app.getPath('vessels').
