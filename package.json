@@ -1,6 +1,6 @@
 {
   "name": "signalk-to-arcgis",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Signalk node server plugin to respond to api call with arcGIS formatted json with vessels' info",
   "main": "index.js",
   "scripts": {
