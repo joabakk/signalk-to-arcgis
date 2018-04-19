@@ -67,8 +67,8 @@ module.exports = function(app, options) {
           attributes.FLAG = countries.getName(vessel.flag, "en")
 
           var geometry = {}
-          geometry.x = attributes.LAT
-          geometry.y = attributes.LON
+          geometry.x = attributes.LON
+          geometry.y = attributes.LAT
 
           response.attributes = attributes
           response.geometry = geometry
