@@ -21,9 +21,11 @@
   "homepage": "https://github.com/joabakk/signalk-to-arcgis#readme",
   "dependencies": {
     "@signalk/nmea0183-utilities": "^0.8.0",
-    "chai": "^4.1.2",
     "i18n-iso-countries": "^3.6.1",
-    "mocha": "^10.6.0",
     "moment": "^2.21.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^10.6.0"
   }
 }
