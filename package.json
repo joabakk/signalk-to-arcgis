@@ -21,7 +21,9 @@
   "homepage": "https://github.com/joabakk/signalk-to-arcgis#readme",
   "dependencies": {
     "@signalk/nmea0183-utilities": "^0.8.0",
+    "debug": "^4.4.3",
     "i18n-iso-countries": "^3.6.1",
+    "lodash": "^4.18.1",
     "moment": "^2.21.0"
   },
   "devDependencies": {
